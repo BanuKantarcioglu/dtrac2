@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  resources :documenttypes
+    resources :document_types,only: [:index,:show] ,defaults: { format: :json }
 end
