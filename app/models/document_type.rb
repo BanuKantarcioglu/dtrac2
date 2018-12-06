@@ -1,0 +1,3 @@
+class DocumentType < ApplicationRecord
+  
+end
