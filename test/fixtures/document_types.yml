@@ -1,9 +1,16 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  description: MyString
-  active: false
+  description: "XYZ Document"
+  active: true
 
 two:
-  description: MyString
-  active: false
+  description: "Working Permit"
+  active: true
+
+three:
+  description: "Student Visa"
+  active: true
+
+four:
+  description: "Default Documentary Notice"
