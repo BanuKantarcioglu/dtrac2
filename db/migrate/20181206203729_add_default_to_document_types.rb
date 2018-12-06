@@ -5,6 +5,6 @@ class AddDefaultToDocumentTypes < ActiveRecord::Migration[5.2]
       :active,
       true
     )
-
+    #BK add default value to a column in a table that is already created
   end
 end
