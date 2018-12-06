@@ -1,16 +1,34 @@
 import React, { Component } from 'react';
 import Documents from './documents.js';
 
-class PeopleList extends Component{
+class Person extends Component{
+
+  constructor(props){
+    super(props)
+    this.state={
+      isHidden:true
+    }
+    this.toggleHidden = this.toggleHidden.bind(this);
+  }
+
+  toggleHidden () {
+
+    this.setState({
+      isHidden: !this.state.isHidden
+    });
+  }
+
   render(props){
     const person = this.props.person;
     return (
-      <li>
+      
+      <li onClick={this.toggleHidden}>
           {person.id},{person.name},{person.jobdescription},{person.active},{person.numberofdocs}
-          <Documents documents={person.documents}/>
+          {!this.state.isHidden && <Documents documents={person.documents}/>}
       </li>
     );
   }
+
 }
 
-export default PeopleList;
+export default Person;
