@@ -21,10 +21,10 @@ class Person extends Component{
   render(props){
     const person = this.props.person;
     return (
-      
+
       <li onClick={this.toggleHidden}>
           {person.id},{person.name},{person.jobdescription},{person.active},{person.numberofdocs}
-          {!this.state.isHidden && <Documents documents={person.documents}/>}
+          {!this.state.isHidden && <Documents documents={person.documents} document_types={this.props.document_types}/>}
       </li>
     );
   }

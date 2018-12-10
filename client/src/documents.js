@@ -8,7 +8,7 @@ class Documents extends Component{
       <div>
         <input
             type="checkbox"/> Show old docs
-        <NewDocument />
+        <NewDocument document_types={this.props.document_types}/>
         <hr/>
         <DocumentList documents={this.props.documents}/>
       </div>

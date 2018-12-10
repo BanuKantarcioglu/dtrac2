@@ -3,16 +3,18 @@ import React, { Component } from 'react';
 
 class NewDocument extends Component{
   render(props){
+    const document_types = this.props.document_types;
+    const optionItems = [<option key="0"></option>].concat(
+    document_types.map((dt) =>
+                <option key={dt.id}>{dt.description}</option>
+            ));
     return(
       <div>
         <h3> New Document </h3>
         <label>
           Document:
           <select>
-            <option value="cathandbook">Cat Handbook</option>
-            <option value="lightsabermanual">Lightsaber Manual</option>
-            <option selected value="howtoloseabattle">How to lose a battle</option>
-            <option value="anewbeginning">A new beginning</option>
+              {optionItems}
           </select>
         </label>
         <label>

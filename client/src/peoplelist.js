@@ -5,7 +5,7 @@ class PeopleList extends Component{
   render(props){
     const peoplelist = this.props.people.map((item,index) =>{
       return(
-        <Person person={item} key={index} />
+        <Person person={item} key={index} document_types={this.props.document_types}/>
       )
     });
     return(
