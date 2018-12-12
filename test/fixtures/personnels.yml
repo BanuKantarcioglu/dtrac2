@@ -1,5 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+dummy:
+  name: "noone"
 one:
   name: MyString
   pno: 1
