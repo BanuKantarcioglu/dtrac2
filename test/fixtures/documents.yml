@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  startdate: 2018-12-12
+  enddate: 2018-12-12
+  status: 1
+  personnel: one
+  document_type: one
+
+two:
+  startdate: 2018-12-12
+  enddate: 2018-12-12
+  status: 1
+  personnel: two
+  document_type: two

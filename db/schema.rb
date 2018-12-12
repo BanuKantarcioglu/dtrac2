@@ -10,11 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_06_203729) do
+ActiveRecord::Schema.define(version: 2018_12_12_080923) do
 
   create_table "document_types", force: :cascade do |t|
     t.string "description"
     t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "documents", force: :cascade do |t|
+    t.date "startdate"
+    t.date "enddate"
+    t.integer "status"
+    t.integer "personnel_id"
+    t.integer "document_type_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_type_id"], name: "index_documents_on_document_type_id"
+    t.index ["personnel_id"], name: "index_documents_on_personnel_id"
+  end
+
+  create_table "personnels", force: :cascade do |t|
+    t.string "name"
+    t.integer "pno"
+    t.string "jobdescription"
+    t.boolean "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
