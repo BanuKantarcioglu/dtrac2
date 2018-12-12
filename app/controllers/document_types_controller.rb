@@ -5,7 +5,7 @@ class DocumentTypesController < ApplicationController
 
   def show
   #  render json: DocumentType.where( id: params[:id]) #find(params[:id])
-    render json: DocumentType.find(params[:id])
+    render json: DocumentType.find_by_id(params[:id])
   end
 
   def new
