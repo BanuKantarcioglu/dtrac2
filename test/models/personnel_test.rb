@@ -12,7 +12,7 @@ class PersonnelTest < ActiveSupport::TestCase
 
   test "personnel should have name" do
     personnel = Personnel.new
-    assert_not personnel.save, " saved personnel without a name"
+    assert_not personnel.save, " saved empty personnel "
   end
 
   test "personnel name should be unique " do
