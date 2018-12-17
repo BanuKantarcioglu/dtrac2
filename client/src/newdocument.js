@@ -4,10 +4,13 @@ import React, { Component } from 'react';
 class NewDocument extends Component{
   render(props){
     const document_types = this.props.document_types;
-    const optionItems = [<option key="0"></option>].concat(
-    document_types.map((dt) =>
+    let optionItems = [<option key="0"></option>]
+    if (document_types && document_types.length>0){
+      optionItems.concat(
+          document_types.map((dt) =>
                 <option key={dt.id}>{dt.description}</option>
             ));
+          }
     return(
       <div>
         <h3> New Document </h3>
