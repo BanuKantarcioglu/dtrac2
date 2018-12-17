@@ -10,8 +10,49 @@ class App extends Component {
     super(props);
     this.state={
       document_types:[],
-      people:this.props.people
+      people:[],
+      isHNewidden:true,
+      newPerson:{
+        name:"",
+        pno:"",
+        jobdescription:"",
+        active:true
+      }
     }
+    this.clearNewPerson = this.clearNewPerson.bind(this); //TODO check why need this how it works wo
+    this.toggleNew = this.toggleNew.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.addNewPerson = this.addNewPerson.bind(this);
+  }
+
+  addNewPerson(){
+    console.log("adding new person")
+    }
+  clearNewPerson(){
+    this.setState({
+      newPerson:{
+        name:"",
+        pno:"",
+        jobdescription:"",
+        active:true
+      }
+    });
+  }
+  toggleNew(){
+    this.clearNewPerson();
+    this.setState({
+      isHNewidden: !this.state.isHNewidden
+    });
+  }
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState(prevState => ({
+      newPerson:{...prevState.newPerson,[name]:value}
+    }));
+
   }
   componentDidMount(){
     axios.get(`${Api.url()}/document_types.json`)
@@ -20,12 +61,21 @@ class App extends Component {
       })
       .catch(error => console.log(error))
 
+    axios.get(`${Api.url()}/personnels.json`)
+      .then(response => {
+        console.log("got personnel");
+        console.log(response.data.personnels);
+        this.setState({people:response.data.personnels})
+      })
+      .catch(error => console.log(error))
+
+
   }
   render(props) {
     return(
       <div>
-        <SearchPeople />
-        <NewPerson />
+        <SearchPeople onAddNewClicked={this.toggleNew} isHNewidden={this.state.isHNewidden}/>
+        {!this.state.isHNewidden && <NewPerson newPerson ={this.state.newPerson} onNewPersonChange={this.handleInputChange} addNewPerson={this.addNewPerson}/>}
         <hr />
         <PeopleList people = {this.state.people} document_types={this.state.document_types}/>
       </div>
