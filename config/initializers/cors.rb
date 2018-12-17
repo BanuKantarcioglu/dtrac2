@@ -12,7 +12,11 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins '*'
 
+    #TODO DRY
     resource '/document_types.json',
+      headers: :any,
+      methods: [:get]
+    resource '/personnels.json',
       headers: :any,
       methods: [:get]
   end
