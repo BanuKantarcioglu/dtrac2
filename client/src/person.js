@@ -23,7 +23,7 @@ class Person extends Component{
     return (
 
       <li onClick={this.toggleHidden}>
-          {person.id},{person.name},{person.jobdescription},{person.active},{person.numberofdocs}
+          {person.id},{person.name},{person.jobdescription},{person.status},{person.documents.length}
           {!this.state.isHidden && <Documents documents={person.documents} document_types={this.props.document_types}/>}
       </li>
     );
