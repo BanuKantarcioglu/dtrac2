@@ -11,7 +11,8 @@ class App extends Component {
     this.state={
       document_types:[],
       people:[],
-      isHNewidden:true,
+      isNewHidden:true,
+      notification:"Loading data...",
       newPerson:{
         name:"",
         pno:"",
@@ -23,13 +24,52 @@ class App extends Component {
     this.toggleNew = this.toggleNew.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.addNewPerson = this.addNewPerson.bind(this);
+    this.setNotification = this.setNotification.bind(this);
+  }
+  setNotification(note){
+    this.setState({notification: note});
+  }
+
+  logError(error){
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
   }
 
   addNewPerson(){
-    console.log("adding new person")
-    }
+    this.setNotification("Saving new person.");
+    axios.post(`${Api.url()}/personnels`,  {personnel:this.state.newPerson})
+      .then(response => {
+        console.log(response)
+        this.setNotification("New Person saved")
+        this.setState(prevState => ({
+          people:prevState.people.concat(response.data.personnel),
+          isNewHidden:true,
+        }));
+        this.clearNewPerson();
+      })
+      .catch(error => {
+        this.setNotification("Error occured during saving new person: " + error.message);
+        this.logError(error);
+      });
+  }
+
   clearNewPerson(){
     this.setState({
+      notification:"",
       newPerson:{
         name:"",
         pno:"",
@@ -41,7 +81,7 @@ class App extends Component {
   toggleNew(){
     this.clearNewPerson();
     this.setState({
-      isHNewidden: !this.state.isHNewidden
+      isNewHidden: !this.state.isNewHidden
     });
   }
   handleInputChange(event) {
@@ -55,27 +95,34 @@ class App extends Component {
 
   }
   componentDidMount(){
-    axios.get(`${Api.url()}/document_types.json`)
-      .then(response => {
-        this.setState({document_types:response.data})
-      })
-      .catch(error => console.log(error))
-
     axios.get(`${Api.url()}/personnels.json`)
       .then(response => {
         console.log("got personnel");
         console.log(response.data.personnels);
-        this.setState({people:response.data.personnels})
+        this.setState({people:response.data.personnels});
+        this.setNotification("People loaded"); //TODO this should fade
       })
       .catch(error => console.log(error))
 
-
+      axios.get(`${Api.url()}/document_types.json`)
+        .then(response => {
+          console.log(response.data);
+          this.setState({document_types:response.data})
+          this.setNotification("");
+        })
+        .catch(error => console.log(error))
   }
   render(props) {
     return(
       <div>
-        <SearchPeople onAddNewClicked={this.toggleNew} isHNewidden={this.state.isHNewidden}/>
-        {!this.state.isHNewidden && <NewPerson newPerson ={this.state.newPerson} onNewPersonChange={this.handleInputChange} addNewPerson={this.addNewPerson}/>}
+        <SearchPeople onAddNewClicked={this.toggleNew} isNewHidden={this.state.isNewHidden}/>
+        <span>{this.state.notification}</span>
+        {!this.state.isNewHidden &&
+          <NewPerson
+            newPerson ={this.state.newPerson}
+            onNewPersonChange={this.handleInputChange}
+            addNewPerson={this.addNewPerson}
+          />}
         <hr />
         <PeopleList people = {this.state.people} document_types={this.state.document_types}/>
       </div>

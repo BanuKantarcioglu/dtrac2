@@ -8,16 +8,23 @@
 #BK uncomment gem rack-CORS
 #BK bundle install
 
-Rails.application.config.middleware.insert_before 0, Rack::Cors do
+Rails.application.config.middleware.insert_before 0, Rack::Cors ,:debug=> true do
   allow do
-    origins '*'
+    origins Rails.application.config.allowed_cors_origins  #'*'
+    resource '*',
+      :headers=>:any,:methods =>[:get,:post,:options]
+      # TODO how about get requests? do we need this?  NO we don't. or do we.
+      # no errors because of client cache? Any restrictions?
+
 
     #TODO DRY
-    resource '/document_types.json',
-      headers: :any,
-      methods: [:get]
-    resource '/personnels.json',
-      headers: :any,
-      methods: [:get]
-  end
+
+    # resource '/personnels.json',
+    #   headers: :any,
+    #   methods: [:get,:post,:options], credentials: true
+    # resource '/document_types.json',
+    #   headers: :any,
+    #   methods: [:get]
+    end
+
 end

@@ -6,7 +6,6 @@ class NewPerson extends Component{
       <div >
       <hr />
         <h3> New Card </h3>
-        {/*#TODO add a status area*/}
         <label>
           Name:
           <input

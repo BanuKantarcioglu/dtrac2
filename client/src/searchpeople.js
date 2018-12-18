@@ -11,8 +11,8 @@ class SearchPeople extends Component{
           <input
             type="checkbox"/> Show inactive
         </label>
-        {this.props.isHNewidden && <button onClick={this.props.onAddNewClicked}>+ Add New Personnel</button>}
-        {!this.props.isHNewidden && <button onClick={this.props.onAddNewClicked}> Cancel Add</button>}
+        {this.props.isNewHidden && <button onClick={this.props.onAddNewClicked}>+ Add New Personnel</button>}
+        {!this.props.isNewHidden && <button onClick={this.props.onAddNewClicked}> Cancel Add</button>}
       </div>
     );
   }
