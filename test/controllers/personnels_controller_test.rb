@@ -5,6 +5,11 @@ class PersonnelsControllerTest < ActionDispatch::IntegrationTest
       get personnels_url
       assert_response :success
   end
+  #TODO how to define difference of these two cases
+  test "should get only all" do
+    get personnels_url , params: { personnel: { showinactive: false}}
+    assert_response :success
+  end
 
   test "should create personnel" do
     assert_difference('Personnel.count') do

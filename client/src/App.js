@@ -32,10 +32,10 @@ class App extends Component {
     this.addNewPerson = this.addNewPerson.bind(this);
     this.setNotification = this.setNotification.bind(this);
   }
+
   setNotification(note){
     this.setState({notification: note});
   }
-
   logError(error){
     if (error.response) {
       // The request was made and the server responded with a status code
@@ -54,7 +54,30 @@ class App extends Component {
     }
     console.log(error.config);
   }
+  clearNewPerson(){
+    this.setState({
+      notification:"",
+      newPerson:{
+        name:"",
+        pno:"",
+        jobdescription:"",
+        active:true
+      }
+    });
+  }
 
+
+  getPeople(showInactive){
+    this.setNotification("Loading People");
+    axios.get(`${Api.url()}/personnels.json`,{params:{showinactive:showInactive}})
+      .then(response => {
+        console.log("got personnel");
+        console.log(response.data.personnels);
+        this.setState({people:response.data.personnels,filtered:response.data.personnels});
+        this.setNotification("People loaded"); //TODO this should fade
+      })
+      .catch(error => console.log(error))
+  }
   addNewPerson(){
     this.setNotification("Saving new person.");
     axios.post(`${Api.url()}/personnels`,  {personnel:this.state.newPerson})
@@ -71,18 +94,6 @@ class App extends Component {
         this.setNotification("Error occured during saving new person: " + error.message);
         this.logError(error);
       });
-  }
-
-  clearNewPerson(){
-    this.setState({
-      notification:"",
-      newPerson:{
-        name:"",
-        pno:"",
-        jobdescription:"",
-        active:true
-      }
-    });
   }
   toggleNew(){
     this.clearNewPerson();
@@ -116,19 +127,14 @@ class App extends Component {
       });
       this.setState({filtered:filteredList});
     }
+    else // show inactive clicked
+    {
+       this.getPeople(value);
+    }
   }
 
-
   componentDidMount(){
-    axios.get(`${Api.url()}/personnels.json`)
-      .then(response => {
-        console.log("got personnel");
-        console.log(response.data.personnels);
-        this.setState({people:response.data.personnels,filtered:response.data.personnels});
-        this.setNotification("People loaded"); //TODO this should fade
-      })
-      .catch(error => console.log(error))
-
+      this.getPeople();
       axios.get(`${Api.url()}/document_types.json`)
         .then(response => {
           console.log(response.data);

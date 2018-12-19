@@ -1,6 +1,11 @@
 class PersonnelsController < ApplicationController
   def index
-    render json: Personnel.all
+    if params[:showinactive] == "true"  #TODO handle boolean params
+      render json: Personnel.all # show everyone
+    else
+      render json: Personnel.where(status: true) # show only active
+    end
+
   end
 
   def create

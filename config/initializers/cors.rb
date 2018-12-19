@@ -10,7 +10,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors ,:debug=> true do
   allow do
-    origins Rails.application.config.allowed_cors_origins  #'*'
+    origins '*'
     resource '*',
       :headers=>:any,:methods =>[:get,:post,:options]
       # TODO how about get requests? do we need this?  NO we don't. or do we.
