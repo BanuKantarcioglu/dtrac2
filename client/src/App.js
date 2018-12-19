@@ -11,6 +11,11 @@ class App extends Component {
     this.state={
       document_types:[],
       people:[],
+      filtered:[],
+      search:{
+          text:"",
+          showInactive:false,
+      },
       isNewHidden:true,
       notification:"Loading data...",
       newPerson:{
@@ -22,7 +27,8 @@ class App extends Component {
     }
     this.clearNewPerson = this.clearNewPerson.bind(this); //TODO check why need this how it works wo
     this.toggleNew = this.toggleNew.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleNewPersonInputChange = this.handleNewPersonInputChange.bind(this);
+    this.handleSearchInputChange = this.handleSearchInputChange.bind(this);
     this.addNewPerson = this.addNewPerson.bind(this);
     this.setNotification = this.setNotification.bind(this);
   }
@@ -84,7 +90,7 @@ class App extends Component {
       isNewHidden: !this.state.isNewHidden
     });
   }
-  handleInputChange(event) {
+  handleNewPersonInputChange(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -94,12 +100,31 @@ class App extends Component {
     }));
 
   }
+  handleSearchInputChange(event){
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState(prevState => ({
+      search:{...prevState.search,[name]:value}
+    }));
+
+    if (name =="text"){
+      const filteredList = this.state.people.filter(item =>{
+        return item.name.toLowerCase().search(
+          value.toLowerCase()) !== -1;
+      });
+      this.setState({filtered:filteredList});
+    }
+  }
+
+
   componentDidMount(){
     axios.get(`${Api.url()}/personnels.json`)
       .then(response => {
         console.log("got personnel");
         console.log(response.data.personnels);
-        this.setState({people:response.data.personnels});
+        this.setState({people:response.data.personnels,filtered:response.data.personnels});
         this.setNotification("People loaded"); //TODO this should fade
       })
       .catch(error => console.log(error))
@@ -115,16 +140,23 @@ class App extends Component {
   render(props) {
     return(
       <div>
-        <SearchPeople onAddNewClicked={this.toggleNew} isNewHidden={this.state.isNewHidden}/>
+        <SearchPeople
+          onAddNewClicked={this.toggleNew}
+          isNewHidden={this.state.isNewHidden}
+          search ={this.state.search}
+          onSearchChange={this.handleSearchInputChange}
+          />
         <span>{this.state.notification}</span>
         {!this.state.isNewHidden &&
           <NewPerson
             newPerson ={this.state.newPerson}
-            onNewPersonChange={this.handleInputChange}
+            onNewPersonChange={this.handleNewPersonInputChange}
             addNewPerson={this.addNewPerson}
           />}
         <hr />
-        <PeopleList people = {this.state.people} document_types={this.state.document_types}/>
+        <PeopleList
+          people = {this.state.filtered}
+          document_types={this.state.document_types}/>
       </div>
       )
   }

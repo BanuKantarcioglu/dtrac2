@@ -7,9 +7,15 @@ class SearchPeople extends Component{
         <label>
           Search
           <input
-            placeholder="type a name"/>
+            placeholder="type a name"
+            name="text"
+            value={this.props.search.text}
+            onChange={(e)=>  this.props.onSearchChange(e)}/>
           <input
-            type="checkbox"/> Show inactive
+            type="checkbox"
+            name="showInactive"
+            value={this.props.search.showInactive}
+            onChange={(e)=>  this.props.onSearchChange(e)} /> Show inactive
         </label>
         {this.props.isNewHidden && <button onClick={this.props.onAddNewClicked}>+ Add New Personnel</button>}
         {!this.props.isNewHidden && <button onClick={this.props.onAddNewClicked}> Cancel Add</button>}
