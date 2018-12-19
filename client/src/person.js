@@ -18,14 +18,35 @@ class Person extends Component{
     });
   }
 
+  //        <li onClick={this.toggleHidden}>
+  //          {person.id},{person.name},{person.jobdescription},{person.status},{person.documents.length}
+  //          {!this.state.isHidden && <Documents documents={person.documents} document_types={this.props.document_types}/>}
+  //      </li>
+    
+
+
   render(props){
     const person = this.props.person;
     return (
+      <tr>
+        <td>
+          {person.name}
+        </td>
+        <td>
+          {person.pno}
+        </td>
+        <td>
+          {person.jobdescription}
+        </td>
+        <td>
+          {person.status}
+        </td>
+        <td>
+          {person.documents.length}
+        </td>
+      </tr>
 
-      <li onClick={this.toggleHidden}>
-          {person.id},{person.name},{person.jobdescription},{person.status},{person.documents.length}
-          {!this.state.isHidden && <Documents documents={person.documents} document_types={this.props.document_types}/>}
-      </li>
+
     );
   }
 

@@ -9,9 +9,20 @@ class PeopleList extends Component{
       )
     });
     return(
-      <ul>
-        {peoplelist}
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th> Name </th>
+            <th> Person Number </th>
+            <th> Job Description </th>
+            <th> Active </th>
+            <th> Number of Documents </th>
+          </tr>
+        </thead>
+        <tbody>
+          {peoplelist}
+        </tbody>
+      </table>
     )
   }
 }
