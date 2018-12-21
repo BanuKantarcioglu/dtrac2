@@ -22,7 +22,7 @@ class Person extends Component{
   //          {person.id},{person.name},{person.jobdescription},{person.status},{person.documents.length}
   //          {!this.state.isHidden && <Documents documents={person.documents} document_types={this.props.document_types}/>}
   //      </li>
-    
+
 
 
   render(props){
@@ -39,7 +39,7 @@ class Person extends Component{
           {person.jobdescription}
         </td>
         <td>
-          {person.status}
+          {person.status?"✔":"✖"}
         </td>
         <td>
           {person.documents.length}

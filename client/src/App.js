@@ -74,7 +74,7 @@ class App extends Component {
         console.log("got personnel");
         console.log(response.data.personnels);
         this.setState({people:response.data.personnels,filtered:response.data.personnels});
-        this.setNotification("People loaded"); //TODO this should fade
+        this.setNotification(this.state.people.length +" People loaded"); //TODO this should fade
       })
       .catch(error => console.log(error))
   }
