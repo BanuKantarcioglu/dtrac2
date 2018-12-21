@@ -27,6 +27,7 @@ class App extends Component {
     }
     this.clearNewPerson = this.clearNewPerson.bind(this); //TODO check why need this how it works wo
     this.toggleNew = this.toggleNew.bind(this);
+    this.filter = this.filter.bind(this);
     this.handleNewPersonInputChange = this.handleNewPersonInputChange.bind(this);
     this.handleSearchInputChange = this.handleSearchInputChange.bind(this);
     this.addNewPerson = this.addNewPerson.bind(this);
@@ -71,10 +72,19 @@ class App extends Component {
     this.setNotification("Loading People");
     axios.get(`${Api.url()}/personnels.json`,{params:{showinactive:showInactive}})
       .then(response => {
-        console.log("got personnel");
-        console.log(response.data.personnels);
-        this.setState({people:response.data.personnels,filtered:response.data.personnels});
-        this.setNotification(this.state.people.length +" People loaded"); //TODO this should fade
+        this.setState({people:response.data.personnels},
+          ()=>{
+            console.log("callback");
+            let filteredList = this.state.people;
+            if(this.state.search.text){
+              console.log("filtering:" + this.state.search.text);
+              filteredList = this.filter(this.state.search.text);
+
+            }
+            this.setState({filtered:filteredList});
+            }
+          );
+        this.setNotification(this.state.people.length +" People loaded"); //TODO this maybe wrong due to async state update
       })
       .catch(error => console.log(error))
   }
@@ -85,7 +95,9 @@ class App extends Component {
         console.log(response)
         this.setNotification("New Person saved")
         this.setState(prevState => ({
+          //TODO to add which state
           people:prevState.people.concat(response.data.personnel),
+          filtered:prevState.filtered.concat(response.data.personnel),
           isNewHidden:true,
         }));
         this.clearNewPerson();
@@ -121,16 +133,20 @@ class App extends Component {
     }));
 
     if (name =="text"){
-      const filteredList = this.state.people.filter(item =>{
-        return item.name.toLowerCase().search(
-          value.toLowerCase()) !== -1;
-      });
+      const filteredList = this.filter(value);
       this.setState({filtered:filteredList});
     }
-    else // show inactive clicked
+    else // show records of inactive
     {
        this.getPeople(value);
     }
+  }
+
+  filter(value){
+    return this.state.people.filter(item =>{
+      return item.name.toLowerCase().search(
+        value.toLowerCase()) !== -1;
+    });
   }
 
   componentDidMount(){
