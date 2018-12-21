@@ -32,8 +32,8 @@ class NewPerson extends Component{
         </label>
         <input
             type="checkbox"
-            name="active"
-            checked={this.props.newPerson.active}
+            name="status"
+            checked={this.props.newPerson.status}
             onChange={(e)=>  this.props.onNewPersonChange(e)}/> Active
         <button onClick={this.props.addNewPerson}> Ekle</button>
       </div>
