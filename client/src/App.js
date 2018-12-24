@@ -32,6 +32,7 @@ class App extends Component {
     this.handleSearchInputChange = this.handleSearchInputChange.bind(this);
     this.addNewPerson = this.addNewPerson.bind(this);
     this.setNotification = this.setNotification.bind(this);
+    this.handlePersonDelete = this.handlePersonDelete.bind(this);
   }
 
   setNotification(note){
@@ -132,7 +133,7 @@ class App extends Component {
       search:{...prevState.search,[name]:value}
     }));
 
-    if (name =="text"){
+    if (name ==="text"){
       const filteredList = this.filter(value);
       this.setState({filtered:filteredList});
     }
@@ -159,6 +160,22 @@ class App extends Component {
         })
         .catch(error => console.log(error))
   }
+  handlePersonDelete(id){
+    axios.delete(`${Api.url()}/personnels/${id}`)
+    .then(response => {
+      const i = this.state.people.findIndex(
+        (item) => {return item.id === id }
+      )
+      this.setState(function(prevstate)  {
+        prevstate.people[i].status =false
+          return{people:prevstate.people}
+      }
+
+      )
+      this.setNotification( "1 person updated");
+    })
+    .catch(error => console.log(error))
+  }
   render(props) {
     return(
       <div>
@@ -178,7 +195,9 @@ class App extends Component {
         <hr />
         <PeopleList
           people = {this.state.filtered}
-          document_types={this.state.document_types}/>
+          document_types={this.state.document_types}
+          onPersonDelete = {this.handlePersonDelete}
+          />
       </div>
       )
   }

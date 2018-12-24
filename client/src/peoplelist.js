@@ -5,18 +5,24 @@ class PeopleList extends Component{
   render(props){
     const peoplelist = this.props.people.map((item,index) =>{
       return(
-        <Person person={item} key={index} document_types={this.props.document_types}/>
+        <Person
+          person={item}
+          key={index}
+          document_types={this.props.document_types}
+          onDelete= {this.props.onPersonDelete}
+          />
       )
     });
     return(
       <table>
         <thead>
           <tr>
+            <th></th>
             <th> Name </th>
             <th> Person Number </th>
             <th> Job Description </th>
             <th> Active </th>
-            <th> Number of Documents </th>
+            <th> # of Docs </th>
           </tr>
         </thead>
         <tbody>

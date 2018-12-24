@@ -12,7 +12,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors ,:debug=> true d
   allow do
     origins '*'
     resource '*',
-      :headers=>:any,:methods =>[:get,:post,:options]
+      :headers=>:any,:methods =>[:get,:post,:options,:delete]
       # TODO how about get requests? do we need this?  NO we don't. or do we.
       # no errors because of client cache? Any restrictions?
 

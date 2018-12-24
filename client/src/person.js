@@ -6,10 +6,12 @@ class Person extends Component{
   constructor(props){
     super(props)
     this.state={
+      isEditable:false,
       isHidden:true
     }
     this.toggleHidden = this.toggleHidden.bind(this);
   }
+
 
   toggleHidden () {
 
@@ -17,6 +19,8 @@ class Person extends Component{
       isHidden: !this.state.isHidden
     });
   }
+
+
 
   //        <li onClick={this.toggleHidden}>
   //          {person.id},{person.name},{person.jobdescription},{person.status},{person.documents.length}
@@ -29,6 +33,14 @@ class Person extends Component{
     const person = this.props.person;
     return (
       <tr>
+        <td>
+          <button> E </button>
+          {person.status &&
+          <button
+            onClick={()=>this.props.onDelete(person.id)}
+            > D </button>
+          }
+        </td>
         <td>
           {person.name}
         </td>
@@ -44,6 +56,7 @@ class Person extends Component{
         <td>
           {person.documents.length}
         </td>
+
       </tr>
 
 
