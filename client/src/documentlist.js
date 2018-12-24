@@ -5,7 +5,7 @@ class DocumentList extends Component{
   render(props){
     const documentlist = this.props.documents.map((item,index) =>{
       return(
-        <Document document={item} key={index} />
+        <Document document={item} key={item.id} />
       )
     });
     return(

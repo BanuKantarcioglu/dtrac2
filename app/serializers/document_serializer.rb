@@ -1,3 +1,3 @@
 class DocumentSerializer < ActiveModel::Serializer
-  attributes :id,:startdate,:enddate,:status
+  attributes :id,:document_type,:startdate,:enddate,:status
 end

@@ -1,26 +1,7 @@
 import React, { Component } from 'react';
-import Documents from './documents.js';
+
 
 class Person extends Component{
-
-  constructor(props){
-    super(props)
-    this.state={
-      isEditable:false,
-      isHidden:true
-    }
-    this.toggleHidden = this.toggleHidden.bind(this);
-  }
-
-
-  toggleHidden () {
-
-    this.setState({
-      isHidden: !this.state.isHidden
-    });
-  }
-
-
 
   //        <li onClick={this.toggleHidden}>
   //          {person.id},{person.name},{person.jobdescription},{person.status},{person.documents.length}
@@ -55,6 +36,15 @@ class Person extends Component{
         </td>
         <td>
           {person.documents.length}
+
+
+          {
+            this.props.isDocumentsVisible
+          ?
+          <button onClick={()=>this.props.showDocuments(person.id)}>v</button>
+          :
+          <button onClick={()=>this.props.showDocuments(person.id)}>></button>
+          }
         </td>
 
       </tr>

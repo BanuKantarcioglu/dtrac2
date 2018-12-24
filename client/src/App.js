@@ -3,6 +3,8 @@ import axios from 'axios';
 import SearchPeople from './searchpeople.js';
 import NewPerson from './newperson.js';
 import PeopleList from './peoplelist.js';
+import Documents from './documents.js';
+
 import Api from './Api';
 
 class App extends Component {
@@ -23,6 +25,10 @@ class App extends Component {
         pno:"",
         jobdescription:"",
         active:true
+      },
+      isDocumentsVisible:false,
+      currentPerson:{
+        documents:[]
       }
     }
     this.clearNewPerson = this.clearNewPerson.bind(this); //TODO check why need this how it works wo
@@ -33,6 +39,7 @@ class App extends Component {
     this.addNewPerson = this.addNewPerson.bind(this);
     this.setNotification = this.setNotification.bind(this);
     this.handlePersonDelete = this.handlePersonDelete.bind(this);
+    this.handleDocumentPane = this.handleDocumentPane.bind(this);
   }
 
   setNotification(note){
@@ -155,7 +162,8 @@ class App extends Component {
       axios.get(`${Api.url()}/document_types.json`)
         .then(response => {
           console.log(response.data);
-          this.setState({document_types:response.data})
+          const docty = response.data.document_types.map((dt)=> {return {id:dt.id,description:dt.description}})
+          this.setState({document_types:[{id:0,description:""}].concat(docty)})
           this.setNotification("");
         })
         .catch(error => console.log(error))
@@ -176,6 +184,18 @@ class App extends Component {
     })
     .catch(error => console.log(error))
   }
+
+  findPersonIndex(id){
+    return  this.state.people.findIndex((item) => {return item.id === id })
+  }
+
+  handleDocumentPane(i){
+    const current=this.state.people[this.findPersonIndex(i)];
+    this.setState({
+      isDocumentsVisible:true,
+      currentPerson:current
+    })
+  }
   render(props) {
     return(
       <div>
@@ -193,11 +213,19 @@ class App extends Component {
             addNewPerson={this.addNewPerson}
           />}
         <hr />
-        <PeopleList
-          people = {this.state.filtered}
-          document_types={this.state.document_types}
-          onPersonDelete = {this.handlePersonDelete}
-          />
+        <div className = "flex-container">
+          <PeopleList
+            people = {this.state.filtered}
+            document_types={this.state.document_types}
+            onPersonDelete = {this.handlePersonDelete}
+            handleDocumentPane = {this.handleDocumentPane}
+            />
+          {this.state.isDocumentsVisible &&
+            <Documents
+              documents={this.state.currentPerson.documents}
+              document_types={this.state.document_types}/>}
+        </div>
+
       </div>
       )
   }

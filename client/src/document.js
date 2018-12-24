@@ -5,7 +5,7 @@ class Document extends Component{
     const document = this.props.document;
     return(
       <li>
-        {document.id},{document.type},{document.startdate},{document.enddate},{document.status}
+        {document.id},{document.document_type.description},{document.startdate},{document.enddate},{document.status}
       </li>
     )
   }

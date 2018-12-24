@@ -10,6 +10,8 @@ class PeopleList extends Component{
           key={index}
           document_types={this.props.document_types}
           onDelete= {this.props.onPersonDelete}
+          showDocuments= {this.props.handleDocumentPane}
+          isDocumentsVisible = {this.props.isDocumentsVisible}
           />
       )
     });
