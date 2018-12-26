@@ -3,17 +3,10 @@ import React, { Component } from 'react';
 
 class Person extends Component{
 
-  //        <li onClick={this.toggleHidden}>
-  //          {person.id},{person.name},{person.jobdescription},{person.status},{person.documents.length}
-  //          {!this.state.isHidden && <Documents documents={person.documents} document_types={this.props.document_types}/>}
-  //      </li>
-
-
-
   render(props){
     const person = this.props.person;
     return (
-      <tr>
+      <tr >
         <td>
           <button> E </button>
           {person.status &&
@@ -34,12 +27,12 @@ class Person extends Component{
         <td>
           {person.status?"✔":"✖"}
         </td>
-        <td>
+        <td >
           {person.documents.length}
 
 
           {
-            this.props.isDocumentsVisible
+            this.props.isCurrent
           ?
           <button onClick={()=>this.props.showDocuments(person.id)}>v</button>
           :

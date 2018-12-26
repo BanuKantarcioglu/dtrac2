@@ -250,6 +250,7 @@ class App extends Component {
         <div className = "flex-container">
           <PeopleList
             people = {filtered}
+            current = {this.state.currentPerson}
             document_types={this.state.document_types}
             onPersonDelete = {this.handlePersonDelete}
             handleDocumentPane = {this.handleDocumentPane}
