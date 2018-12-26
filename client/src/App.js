@@ -29,6 +29,13 @@ class App extends Component {
       isDocumentsVisible:false,
       currentPerson:{
         documents:[]
+      },
+      newDocument:{
+        document_type_id:0,
+        status:0,
+        startdate:"",
+        enddate:"",
+        personnel_id:""
       }
     }
     this.clearNewPerson = this.clearNewPerson.bind(this); //TODO check why need this how it works wo
@@ -40,6 +47,8 @@ class App extends Component {
     this.setNotification = this.setNotification.bind(this);
     this.handlePersonDelete = this.handlePersonDelete.bind(this);
     this.handleDocumentPane = this.handleDocumentPane.bind(this);
+    this.handleNewDocumentInputChange = this.handleNewDocumentInputChange.bind(this);
+    this.addNewDocument = this.addNewDocument.bind(this);
   }
 
   setNotification(note){
@@ -131,6 +140,16 @@ class App extends Component {
     }));
 
   }
+  handleNewDocumentInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState(prevState => ({
+      newDocument:{...prevState.newDocument,[name]:value}
+    }));
+
+  }
   handleSearchInputChange(event){
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -193,10 +212,34 @@ class App extends Component {
     const current=this.state.people[this.findPersonIndex(i)];
     this.setState({
       isDocumentsVisible:true,
-      currentPerson:current
+      currentPerson:current,
+      newDocument:{personnel_id:i}
     })
   }
+
+  addNewDocument(){
+    this.setNotification("Saving new Document.");
+    axios.post(`${Api.url()}/documents`,  {document:this.state.newDocument})
+      .then(response => {
+        console.log(response)
+        const newdocument = response.data.document;
+        const peopleIndex = this.findPersonIndex(newdocument.personnel_id);
+        this.setState(function(prevstate)  {
+          prevstate.people[peopleIndex].documents.push(newdocument);
+            return{people:prevstate.people}
+        });
+
+        this.setNotification("New Document saved")
+
+      })
+      .catch(error => {
+        this.setNotification("Error occured during saving new document: " + error.message);
+        this.logError(error);
+      });
+  }
+
   render(props) {
+    const filtered = this.state.people;
     return(
       <div>
         <SearchPeople
@@ -215,7 +258,7 @@ class App extends Component {
         <hr />
         <div className = "flex-container">
           <PeopleList
-            people = {this.state.filtered}
+            people = {filtered}
             document_types={this.state.document_types}
             onPersonDelete = {this.handlePersonDelete}
             handleDocumentPane = {this.handleDocumentPane}
@@ -223,7 +266,10 @@ class App extends Component {
           {this.state.isDocumentsVisible &&
             <Documents
               documents={this.state.currentPerson.documents}
-              document_types={this.state.document_types}/>}
+              newDocument={this.state.newDocument}
+              document_types={this.state.document_types}
+              onNewDocumentChange={this.handleNewDocumentInputChange}
+              addNewDocument={this.addNewDocument}/>}
         </div>
 
       </div>
