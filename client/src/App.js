@@ -13,7 +13,7 @@ class App extends Component {
     this.state={
       document_types:[],
       people:[],
-      filtered:[],
+
       search:{
           text:"",
           showInactive:false,
@@ -89,18 +89,7 @@ class App extends Component {
     this.setNotification("Loading People");
     axios.get(`${Api.url()}/personnels.json`,{params:{showinactive:showInactive}})
       .then(response => {
-        this.setState({people:response.data.personnels},
-          ()=>{
-            console.log("callback");
-            let filteredList = this.state.people;
-            if(this.state.search.text){
-              console.log("filtering:" + this.state.search.text);
-              filteredList = this.filter(this.state.search.text);
-
-            }
-            this.setState({filtered:filteredList});
-            }
-          );
+        this.setState({people:response.data.personnels} );
         this.setNotification(this.state.people.length +" People loaded"); //TODO this maybe wrong due to async state update
       })
       .catch(error => console.log(error))
@@ -114,7 +103,7 @@ class App extends Component {
         this.setState(prevState => ({
           //TODO to add which state
           people:prevState.people.concat(response.data.personnel),
-          filtered:prevState.filtered.concat(response.data.personnel),
+
           isNewHidden:true,
         }));
         this.clearNewPerson();
@@ -160,8 +149,8 @@ class App extends Component {
     }));
 
     if (name ==="text"){
-      const filteredList = this.filter(value);
-      this.setState({filtered:filteredList});
+
+
     }
     else // show records of inactive
     {
@@ -170,9 +159,11 @@ class App extends Component {
   }
 
   filter(value){
+    const searchText = this.state.search.text;
+    const showInactive =  this.state.search.showInactive;
     return this.state.people.filter(item =>{
       return item.name.toLowerCase().search(
-        value.toLowerCase()) !== -1;
+        searchText.toLowerCase()) !== -1 && ( showInactive || item.status);
     });
   }
 
@@ -239,7 +230,7 @@ class App extends Component {
   }
 
   render(props) {
-    const filtered = this.state.people;
+    const filtered =  this.filter();
     return(
       <div>
         <SearchPeople
