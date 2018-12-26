@@ -248,20 +248,26 @@ class App extends Component {
           />}
         <hr />
         <div className = "flex-container">
+        <div className="flex-child">
           <PeopleList
+
             people = {filtered}
             current = {this.state.currentPerson}
             document_types={this.state.document_types}
             onPersonDelete = {this.handlePersonDelete}
             handleDocumentPane = {this.handleDocumentPane}
             />
+            </div>
           {this.state.isDocumentsVisible &&
+            <div className="flex-child">
             <Documents
+              className="flex-child"
               documents={this.state.currentPerson.documents}
               newDocument={this.state.newDocument}
               document_types={this.state.document_types}
               onNewDocumentChange={this.handleNewDocumentInputChange}
-              addNewDocument={this.addNewDocument}/>}
+              addNewDocument={this.addNewDocument}/>
+            </div>}
         </div>
 
       </div>

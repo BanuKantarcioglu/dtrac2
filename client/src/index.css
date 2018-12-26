@@ -39,3 +39,6 @@ table th {
   display: flex;
   flex-direction: row;
 }
+.flex-child{
+  width:50%;
+}
