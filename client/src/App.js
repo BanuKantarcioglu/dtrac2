@@ -45,10 +45,11 @@ class App extends Component {
     this.handleSearchInputChange = this.handleSearchInputChange.bind(this);
     this.addNewPerson = this.addNewPerson.bind(this);
     this.setNotification = this.setNotification.bind(this);
-    this.handlePersonDelete = this.handlePersonDelete.bind(this);
+    this.deletePerson = this.deletePerson.bind(this);
     this.handleDocumentPane = this.handleDocumentPane.bind(this);
     this.handleNewDocumentInputChange = this.handleNewDocumentInputChange.bind(this);
     this.addNewDocument = this.addNewDocument.bind(this);
+    this.deleteDocument = this.deleteDocument.bind(this);
   }
 
   setNotification(note){
@@ -178,7 +179,7 @@ class App extends Component {
         })
         .catch(error => console.log(error))
   }
-  handlePersonDelete(id){
+  deletePerson(id){
     axios.delete(`${Api.url()}/personnels/${id}`)
     .then(response => {
       const i = this.state.people.findIndex(
@@ -229,6 +230,23 @@ class App extends Component {
       });
   }
 
+  deleteDocument(id){
+    axios.delete(`${Api.url()}/documents/${id}`)
+    .then(response => {
+      //current persondan bu dökümanı çıkar
+      const i = this.state.people.findIndex(
+        (item) => {return item.id === this.state.currentPerson.id }
+      )
+      this.setState(function(prevstate)  {
+        prevstate.people[i].documents =prevstate.people[i].documents.filter((item)=>  item.id !==id)
+          return{people:prevstate.people}
+      }
+
+      )
+      this.setNotification( "1 document deleted");
+    })
+    .catch(error => console.log(error))
+  }
   render(props) {
     const filtered =  this.filter();
     return(
@@ -254,7 +272,7 @@ class App extends Component {
             people = {filtered}
             current = {this.state.currentPerson}
             document_types={this.state.document_types}
-            onPersonDelete = {this.handlePersonDelete}
+            onPersonDelete = {this.deletePerson}
             handleDocumentPane = {this.handleDocumentPane}
             />
             </div>
@@ -266,7 +284,8 @@ class App extends Component {
               newDocument={this.state.newDocument}
               document_types={this.state.document_types}
               onNewDocumentChange={this.handleNewDocumentInputChange}
-              addNewDocument={this.addNewDocument}/>
+              addNewDocument={this.addNewDocument}
+              deleteDocument = {this.deleteDocument}/>
             </div>}
         </div>
 

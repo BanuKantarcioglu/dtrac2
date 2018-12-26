@@ -5,13 +5,28 @@ class DocumentList extends Component{
   render(props){
     const documentlist = this.props.documents.map((item,index) =>{
       return(
-        <Document document={item} key={item.id} />
+        <Document
+          document={item}
+          key={item.id}
+          deleteDocument= {this.props.deleteDocument}
+          />
       )
     });
     return(
-      <ul>
-        {documentlist}
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th> Document Type </th>
+            <th> Start Date </th>
+            <th> End Date </th>
+            <th> Status </th>
+          </tr>
+        </thead>
+        <tbody>
+          {documentlist}
+        </tbody>
+      </table>
     )
   }
 }

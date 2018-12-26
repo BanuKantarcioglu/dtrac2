@@ -13,6 +13,14 @@ class DocumentsController < ApplicationController
 
   end
 
+  def destroy
+    @document = Document.find_by_id(params[:id])
+    if @document.destroy
+      head :no_content, status: :success
+    else
+      render json: @personnel.errors, status: :unprocessable_entity
+    end
+  end
 
   private
   def document_params

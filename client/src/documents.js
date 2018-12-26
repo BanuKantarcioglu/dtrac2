@@ -15,7 +15,10 @@ class Documents extends Component{
           addNewDocument={this.props.addNewDocument}
           />
         <hr/>
-        <DocumentList documents={this.props.documents}/>
+        <DocumentList
+          documents={this.props.documents}
+          deleteDocument= {this.props.deleteDocument}
+          />
       </div>
     );
   }
