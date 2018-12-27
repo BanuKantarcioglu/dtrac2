@@ -32,7 +32,7 @@ class App extends Component {
       },
       newDocument:{
         document_type_id:0,
-        status:0,
+        istracking:true,
         startdate:"",
         enddate:"",
         personnel_id:""
@@ -46,7 +46,7 @@ class App extends Component {
     this.addNewPerson = this.addNewPerson.bind(this);
     this.setNotification = this.setNotification.bind(this);
     this.deletePerson = this.deletePerson.bind(this);
-    this.handleDocumentPane = this.handleDocumentPane.bind(this);
+    this.toggleDocuments = this.toggleDocuments.bind(this);
     this.handleNewDocumentInputChange = this.handleNewDocumentInputChange.bind(this);
     this.addNewDocument = this.addNewDocument.bind(this);
     this.deleteDocument = this.deleteDocument.bind(this);
@@ -84,42 +84,18 @@ class App extends Component {
       }
     });
   }
-
-
-  getPeople(showInactive){
-    this.setNotification("Loading People");
-    axios.get(`${Api.url()}/personnels.json`,{params:{showinactive:showInactive}})
-      .then(response => {
-        this.setState({people:response.data.personnels} );
-        this.setNotification(this.state.people.length +" People loaded"); //TODO this maybe wrong due to async state update
-      })
-      .catch(error => console.log(error))
-  }
-  addNewPerson(){
-    this.setNotification("Saving new person.");
-    axios.post(`${Api.url()}/personnels`,  {personnel:this.state.newPerson})
-      .then(response => {
-        console.log(response)
-        this.setNotification("New Person saved")
-        this.setState(prevState => ({
-          //TODO to add which state
-          people:prevState.people.concat(response.data.personnel),
-
-          isNewHidden:true,
-        }));
-        this.clearNewPerson();
-      })
-      .catch(error => {
-        this.setNotification("Error occured during saving new person: " + error.message);
-        this.logError(error);
-      });
-  }
-  toggleNew(){
-    this.clearNewPerson();
-    this.setState({
-      isNewHidden: !this.state.isNewHidden
+  filter(value){
+    const searchText = this.state.search.text;
+    const showInactive =  this.state.search.showInactive;
+    return this.state.people.filter(item =>{
+      return item.name.toLowerCase().search(
+        searchText.toLowerCase()) !== -1 && ( showInactive || item.status);
     });
   }
+  findPersonIndex(id){
+    return  this.state.people.findIndex((item) => {return item.id === id })
+  }
+
   handleNewPersonInputChange(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -132,7 +108,7 @@ class App extends Component {
   }
   handleNewDocumentInputChange(event) {
     const target = event.target;
-    const value = target.value;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
     this.setState(prevState => ({
@@ -159,15 +135,6 @@ class App extends Component {
     }
   }
 
-  filter(value){
-    const searchText = this.state.search.text;
-    const showInactive =  this.state.search.showInactive;
-    return this.state.people.filter(item =>{
-      return item.name.toLowerCase().search(
-        searchText.toLowerCase()) !== -1 && ( showInactive || item.status);
-    });
-  }
-
   componentDidMount(){
       this.getPeople();
       axios.get(`${Api.url()}/document_types.json`)
@@ -179,12 +146,49 @@ class App extends Component {
         })
         .catch(error => console.log(error))
   }
+  getPeople(showInactive){
+    this.setNotification("Loading People");
+    axios.get(`${Api.url()}/personnels.json`,{params:{showinactive:showInactive}})
+      .then(response => {
+        this.setState({people:response.data.personnels} );
+        this.setNotification(this.state.people.length +" People loaded"); //TODO this maybe wrong due to async state update
+      })
+      .catch(error => console.log(error))
+  }
+  toggleNew(){
+    this.clearNewPerson();
+    this.setState({
+      isNewHidden: !this.state.isNewHidden
+    });
+  }
+
+  addNewPerson(){
+    this.setNotification("Saving new person.");
+    axios.post(`${Api.url()}/personnels`,  {personnel:this.state.newPerson})
+      .then(response => {
+        console.log(response)
+        this.setNotification("New Person saved")
+        this.setState(prevState => ({
+          //TODO to add which state
+          people:prevState.people.concat(response.data.personnel),
+
+          isNewHidden:true,
+        }));
+        this.clearNewPerson();
+      })
+      .catch(error => {
+        this.setNotification("Error occured during saving new person: " + error.message);
+        this.logError(error);
+      });
+  }
   deletePerson(id){
+    const i = this.findPersonIndex(id)
+    if(this.state.people[i].documents.length>0){
+      this.setNotification("Person has active documents can't inactivate.")
+      return;
+    }
     axios.delete(`${Api.url()}/personnels/${id}`)
     .then(response => {
-      const i = this.state.people.findIndex(
-        (item) => {return item.id === id }
-      )
       this.setState(function(prevstate)  {
         prevstate.people[i].status =false
           return{people:prevstate.people}
@@ -196,11 +200,7 @@ class App extends Component {
     .catch(error => console.log(error))
   }
 
-  findPersonIndex(id){
-    return  this.state.people.findIndex((item) => {return item.id === id })
-  }
-
-  handleDocumentPane(i){
+  toggleDocuments(i){
     const current=this.state.people[this.findPersonIndex(i)];
     this.setState({
       isDocumentsVisible:true,
@@ -208,7 +208,6 @@ class App extends Component {
       newDocument:{personnel_id:i}
     })
   }
-
   addNewDocument(){
     this.setNotification("Saving new Document.");
     axios.post(`${Api.url()}/documents`,  {document:this.state.newDocument})
@@ -229,14 +228,11 @@ class App extends Component {
         this.logError(error);
       });
   }
-
   deleteDocument(id){
     axios.delete(`${Api.url()}/documents/${id}`)
     .then(response => {
       //current persondan bu dökümanı çıkar
-      const i = this.state.people.findIndex(
-        (item) => {return item.id === this.state.currentPerson.id }
-      )
+      const i = this.findPersonIndex(this.state.currentPerson.id)
       this.setState(function(prevstate)  {
         prevstate.people[i].documents =prevstate.people[i].documents.filter((item)=>  item.id !==id)
           return{people:prevstate.people}
@@ -247,6 +243,7 @@ class App extends Component {
     })
     .catch(error => console.log(error))
   }
+
   render(props) {
     const filtered =  this.filter();
     return(
@@ -273,7 +270,7 @@ class App extends Component {
             current = {this.state.currentPerson}
             document_types={this.state.document_types}
             onPersonDelete = {this.deletePerson}
-            handleDocumentPane = {this.handleDocumentPane}
+            toggleDocuments = {this.toggleDocuments}
             />
             </div>
           {this.state.isDocumentsVisible &&

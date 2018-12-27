@@ -21,8 +21,12 @@ class Document extends Component{
           {document.enddate}
         </td>
         <td>
-          {document.status}
+          {document.istracking?"✔":"✖"}
+          <button
+            
+            > Do Not Track </button>
         </td>
+
       </tr>
     )
   }

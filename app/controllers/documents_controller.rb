@@ -18,12 +18,12 @@ class DocumentsController < ApplicationController
     if @document.destroy
       head :no_content, status: :success
     else
-      render json: @personnel.errors, status: :unprocessable_entity
+      render json: @document.errors, status: :unprocessable_entity
     end
   end
 
   private
   def document_params
-    params.require(:document).permit(:document_type_id,:personnel_id,:status,:startdate,:enddate)
+    params.require(:document).permit(:document_type_id,:personnel_id,:startdate,:enddate,:istracking)
   end
 end

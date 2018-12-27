@@ -18,18 +18,6 @@ class NewDocument extends Component{
           </select>
         </label>
         <label>
-          Status:
-          <select
-            name="status"
-            value={this.props.newDocument.status}
-            onChange={(e)=>  this.props.onNewDocumentChange(e)}>
-
-            <option defaultValue value={0}>initial</option>
-            <option value={1}>processing</option>
-            <option value={2}>complete</option>
-          </select>
-        </label>
-        <label>
           Start Date:
           <input
             placeholder="start date "
@@ -45,6 +33,11 @@ class NewDocument extends Component{
             value={this.props.newDocument.enddate}
             onChange={(e)=>  this.props.onNewDocumentChange(e)} />
         </label>
+        <input
+            type="checkbox"
+            name="donottrack"
+            checked={this.props.newDocument.donottrack}
+            onChange={(e)=>  this.props.onNewPersonChange(e)}/> Do Not Track
         <button
           onClick={this.props.addNewDocument}> Ekle</button>
       </div>

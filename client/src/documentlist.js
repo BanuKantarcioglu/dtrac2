@@ -20,7 +20,7 @@ class DocumentList extends Component{
             <th> Document Type </th>
             <th> Start Date </th>
             <th> End Date </th>
-            <th> Status </th>
+            <th> Is Tracking </th>
           </tr>
         </thead>
         <tbody>

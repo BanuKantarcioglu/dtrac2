@@ -4,7 +4,7 @@ import Person from './person.js';
 class PeopleList extends Component{
   render(props){
     const current_id = this.props.current.id;
-    const peoplelist = this.props.people.map((item,index) =>{  
+    const peoplelist = this.props.people.map((item,index) =>{
       return(
         <Person
           person={item}
@@ -12,7 +12,7 @@ class PeopleList extends Component{
           isCurrent = {item.id == current_id}
           document_types={this.props.document_types}
           onDelete= {this.props.onPersonDelete}
-          showDocuments= {this.props.handleDocumentPane}
+          showDocuments= {this.props.toggleDocuments}
           isDocumentsVisible = {this.props.isDocumentsVisible}
           />
       )
