@@ -16,6 +16,11 @@ class SearchPeople extends Component{
             name="showInactive"
             value={this.props.search.showInactive}
             onChange={(e)=>  this.props.onSearchChange(e)} /> Show inactive
+          <input
+            type="checkbox"
+            name="showUntracked"
+            value={this.props.search.showUntracked}
+            onChange={(e)=>  this.props.onSearchChange(e)}/> Show untracked documents
         </label>
         {this.props.isNewHidden && <button onClick={this.props.onAddNewClicked}>+ Add New Personnel</button>}
         {!this.props.isNewHidden && <button onClick={this.props.onAddNewClicked}> Cancel Add</button>}

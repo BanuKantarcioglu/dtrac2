@@ -35,8 +35,8 @@ class NewDocument extends Component{
         </label>
         <input
             type="checkbox"
-            name="donottrack"
-            checked={this.props.newDocument.donottrack}
+            name="istracking"
+            checked={this.props.newDocument.istracking}
             onChange={(e)=>  this.props.onNewPersonChange(e)}/> Do Not Track
         <button
           onClick={this.props.addNewDocument}> Ekle</button>

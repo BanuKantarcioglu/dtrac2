@@ -22,9 +22,10 @@ class Document extends Component{
         </td>
         <td>
           {document.istracking?"✔":"✖"}
+          {document.istracking?
           <button
-            
-            > Do Not Track </button>
+            onClick={()=>this.props.doNotTrackDocument(document.id)}
+            > Do Not Track </button>:""}
         </td>
 
       </tr>

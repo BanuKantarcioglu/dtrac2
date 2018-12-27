@@ -17,6 +17,7 @@ class App extends Component {
       search:{
           text:"",
           showInactive:false,
+          showUntracked:false
       },
       isNewHidden:true,
       notification:"Loading data...",
@@ -50,6 +51,7 @@ class App extends Component {
     this.handleNewDocumentInputChange = this.handleNewDocumentInputChange.bind(this);
     this.addNewDocument = this.addNewDocument.bind(this);
     this.deleteDocument = this.deleteDocument.bind(this);
+    this.doNotTrackDocument = this.doNotTrackDocument.bind(this);
   }
 
   setNotification(note){
@@ -87,11 +89,18 @@ class App extends Component {
   filter(value){
     const searchText = this.state.search.text;
     const showInactive =  this.state.search.showInactive;
-    return this.state.people.filter(item =>{
-      return item.name.toLowerCase().search(
-        searchText.toLowerCase()) !== -1 && ( showInactive || item.status);
-    });
-  }
+    const showUntracked = this.state.search.showUntracked;
+
+    return  this.state.people.filter(item =>{
+      return item.name.toLowerCase().search(searchText.toLowerCase()) !== -1
+              && ( showInactive || item.status) ;
+            }).map((item,index)=>{
+                item.documents = item.documents.filter(doc =>{
+                  return showUntracked || doc.istracking || false
+              });
+              return item;
+            });
+      }
   findPersonIndex(id){
     return  this.state.people.findIndex((item) => {return item.id === id })
   }
@@ -244,6 +253,20 @@ class App extends Component {
     .catch(error => console.log(error))
   }
 
+  doNotTrackDocument(id){
+    axios.put(`${Api.url()}/documents/${id}`)
+    .then(response => {
+      this.setState(function(prevstate)  {
+        const docs = prevstate.people[this.findPersonIndex(this.state.currentPerson.id)].documents;
+        docs[docs.findIndex((item) => {return item.id === id })] = response.data.document
+        }
+
+      )
+      this.setNotification( "1 document removed from tracking");
+    })
+    .catch(error => console.log(error))
+  }
+
   render(props) {
     const filtered =  this.filter();
     return(
@@ -265,7 +288,6 @@ class App extends Component {
         <div className = "flex-container">
         <div className="flex-child">
           <PeopleList
-
             people = {filtered}
             current = {this.state.currentPerson}
             document_types={this.state.document_types}
@@ -282,7 +304,8 @@ class App extends Component {
               document_types={this.state.document_types}
               onNewDocumentChange={this.handleNewDocumentInputChange}
               addNewDocument={this.addNewDocument}
-              deleteDocument = {this.deleteDocument}/>
+              deleteDocument = {this.deleteDocument}
+              doNotTrackDocument = {this.doNotTrackDocument}/>
             </div>}
         </div>
 

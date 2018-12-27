@@ -6,8 +6,6 @@ class Documents extends Component{
   render(props){
     return (
       <div>
-        <input
-            type="checkbox"/> Show old docs
         <NewDocument
           document_types={this.props.document_types}
           newDocument={this.props.newDocument}
@@ -18,6 +16,7 @@ class Documents extends Component{
         <DocumentList
           documents={this.props.documents}
           deleteDocument= {this.props.deleteDocument}
+          doNotTrackDocument = {this.props.doNotTrackDocument}
           />
       </div>
     );

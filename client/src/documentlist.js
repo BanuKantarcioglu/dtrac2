@@ -8,7 +8,8 @@ class DocumentList extends Component{
         <Document
           document={item}
           key={item.id}
-          deleteDocument= {this.props.deleteDocument}
+          doNotTrackDocument = {this.props.doNotTrackDocument}
+          deleteDocument = {this.props.deleteDocument}
           />
       )
     });
